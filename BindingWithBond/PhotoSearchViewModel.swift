@@ -18,28 +18,26 @@ class PhotoSearchViewModel {
     let errorMessages = EventProducer<String>()
     
     let searchMetadataViewModel = PhotoSearchMetadataViewModel()
-
-
-
-
+    //Initia o PhotoSearch
+    private let searchService: PhotoSearch = {
+        let apiKey = NSBundle.mainBundle().objectForInfoDictionaryKey("apiKey") as! String
+        return PhotoSearch(key: apiKey)
+    }()
     
     init() {
         //Coloca o valor Bond
        // searchString.value = "Bond"
-        
-        
+
         //Adiciona um map com condicoes maior que 3 para pintar
         searchString
             .map { $0!.characters.count > 3 }
             .bindTo(validSearchText)
-        
-        
+
         //Pega e imprime o valor no bidirectional
         searchString.observeNew {
             text in 
             print(text)
         }
-        
         
         //Quando tiver mais de 3 caracteres executa a busca por imagem
         searchString
@@ -60,17 +58,9 @@ class PhotoSearchViewModel {
         }
     }
     
-    //Initia o PhotoSearch
-    private let searchService: PhotoSearch = {
-        let apiKey = NSBundle.mainBundle().objectForInfoDictionaryKey("apiKey") as! String
-        return PhotoSearch(key: apiKey)
-    }()
-    
     func executeSearch(text: String) {
         print("Texto buscado : " + text)
-        
         var query = PhotoQuery()
-        
         query.text = searchString.value ?? ""
         query.creativeCommonsLicence = searchMetadataViewModel.creativeCommons.value
         query.dateFilter = searchMetadataViewModel.dateFilter.value
@@ -80,25 +70,18 @@ class PhotoSearchViewModel {
         searchInProgress.value = true
         
         searchService.findPhotos(query) {
-            
             [unowned self] result in
             
             self.searchInProgress.value = false
-            
             switch result
             {
-            
             case .Success(let photos):
                 self.searchResults.removeAll()
                 self.searchResults.insertContentsOf(photos, atIndex: 0)
-                
             case .Error:
                 self.errorMessages
                     .next("There was an API request issue of some sort. Go ahead, hit me with that 1-star review!")
-
             }
         }
-        
-        
     }
 }
