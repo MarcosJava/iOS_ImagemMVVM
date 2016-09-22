@@ -1,0 +1,13 @@
+PODS:
+  - Bond (4.3.0)
+  - DatePickerCell (1.0.4)
+
+DEPENDENCIES:
+  - Bond (= 4.3.0)
+  - DatePickerCell (= 1.0.4)
+
+SPEC CHECKSUMS:
+  Bond: ebe2364b18130690083cbceff036420b21494ae4
+  DatePickerCell: 20d2ba8b5cd5bb8a5a79e2b43bc7758e3b65daf2
+
+COCOAPODS: 0.39.0
