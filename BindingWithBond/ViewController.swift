@@ -55,23 +55,14 @@ class ViewController: UIViewController {
         viewModel.searchResults.lift().bindTo(resultsTable) { indexPath, dataSource, tableView in
             
             let cell = tableView.dequeueReusableCellWithIdentifier("MyCell", forIndexPath: indexPath) as! PhotoTableViewCell
-            
             let photo = dataSource[indexPath.section][indexPath.row]
-            
             cell.title.text = photo.title
-            
             cell.photo.image = nil
             
             let qualityOfServiceClass = QOS_CLASS_BACKGROUND
-            
             let backgroundQueue = dispatch_get_global_queue(qualityOfServiceClass, 0)
-            
-            
-            
             dispatch_async(backgroundQueue) {
-                
                 if let imageData = NSData(contentsOfURL: photo.url) {
-                    
                     dispatch_async(dispatch_get_main_queue()) {
                         cell.photo.image = UIImage(data: imageData)
                     }
@@ -93,56 +84,11 @@ class ViewController: UIViewController {
             
             alertController.addAction(actionOk)
         }
-        
-
     }
-    
-    
-    
-    
-    
-    
     
     func bindViewModel() {
         //viewModel.searchString.bindTo(searchTextField.bnd_text)
         viewModel.searchString.bidirectionalBindTo(searchTextField.bnd_text)
-
-    }
-    
-    func etapa4() -> Void{
-        
-        searchTextField.bnd_text
-            .map { $0?.characters.count > 0 }
-            .bindTo(self.activityIndicator.bnd_animating)
-
-    }
-    
-    func etapa3() -> Void{
-        searchTextField.bnd_text
-            .map { $0?.uppercaseString }
-            .observe {
-                text in
-                print(text)
-                
-        }
-    }
-    
-    func etapa2() -> Void{
-        let uppercase = searchTextField.bnd_text
-            .map { $0?.uppercaseString }
-        
-        uppercase.observe {
-            text in
-            print(text)
-        }
-    }
-    
-    func etapa1(){
-        searchTextField.bnd_text.observe {
-            text in
-            print(text)
-        }
-
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -152,6 +98,5 @@ class ViewController: UIViewController {
             settingsVC.viewModel = viewModel.searchMetadataViewModel
         }
     }
-
 }
 
